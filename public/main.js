@@ -2,7 +2,12 @@ Vue.component('providers-list', {
 	data: function() {
 		return {
 			provider: '',
-			providers: []
+			providers: [],
+			editedProvider: '',
+			edit: {
+				enabled: true,
+				id: -1
+			}
 		};
 	},
 	mounted() {
@@ -40,7 +45,7 @@ Vue.component('providers-list', {
 				alert(e);
 			})
 		},
-		delProvider: function(id, index) {
+		delProvider: function(id, index) { //нафиг нам ид если есть индекс
 			console.log('Come to del');
 			fetch('http://localhost:3000/api/providers/' + id, {
 				method: 'DELETE',
@@ -51,19 +56,25 @@ Vue.component('providers-list', {
 			})
 			.then(response => response.json())
 			.then(() => this.providers.splice(index, 1));
+		},
+		editProvider: function(index) {
+			this.editedProvider = this.providers[index];
+			this.edit.enabled = true;
+			this.edit.id = this.providers[index].id;
 		}
 	},
 	template: `
 	<div class="provider">
 		<div class="input-and-list">
-			<input type="text" id="provider" name="provider" v-model="provider" @keyup.enter="addProvider"/>
+			<input class="form-element" type="text" id="provider" name="provider" v-model="provider" @keyup.enter="addProvider"/>
 			<div class="providers-list">
 			<ul>
 			<li v-for="(provider, index) in providers">
 				<input type="checkbox">
-				<label> {{ provider.name }} </label>
+				<input class="provider-edit" type="text" v-if="edit.enabled && edit.id === provider.id" v-model="editedProvider.name"></input>
+				<span class="provider-label" v-else > {{ provider.name }} </span>
 				<span class="spacer"></span>
-				<img class="edit" src="edit.png"></img>
+				<img @click="editProvider(index)" class="edit" src="edit.png"></img>
 				<img @click="delProvider(provider.id, index)" class="edit" src="trash.png"></img>
 			</li>
 		</ul>
@@ -85,15 +96,15 @@ Vue.component('client', {
 	template: `
 		<div class="edit-user">
 			<div class="label-container">
-				<label for="name">Name:</label>
-				<label for="mail">E-mail:</label>
-				<label for="phone">Phone:</label>
-				<label for="providers">Providers:</label>
+				<label class="form-element" for="name">Name:</label>
+				<label class="form-element" for="mail">E-mail:</label>
+				<label class="form-element" for="phone">Phone:</label>
+				<label class="form-element" for="providers">Providers:</label>
 			</div>
 			<div class="input-container">
-				<input type="text" id="name" name="user_name" />
-				<input type="email" id="mail" name="user_email" />
-				<input type="phone" id="phone" name="user_phone" />
+				<input class="form-element" type="text" id="name" name="user_name" />
+				<input class="form-element" type="email" id="mail" name="user_email" />
+				<input class="form-element" type="phone" id="phone" name="user_phone" />
 				<providers-list></providers-list>
 			</div>
 		</div>

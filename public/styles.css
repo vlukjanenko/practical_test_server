@@ -163,7 +163,7 @@ input {
 	width: 300px;
 }
 
-.edit-user input, .edit-user label, #add-provider, .providers-list {
+.form-element, #add-provider, .providers-list {
 	font-family: Arial, Helvetica, sans-serif;
 	height: 30px;
 	line-height: 30px;
@@ -171,11 +171,11 @@ input {
 	margin: 5px;
 }
 
-.edit-user label {
+label.form-element  {
 	font-weight: bold;
 }
 
-.edit-user input {
+input.form-element {
 	border: 1px solid gray;
 	border-radius: 5px;
 	/* width: 100%; */
@@ -191,7 +191,7 @@ input {
 
 .providers-list {
 
- 	width: auto;
+ 	width: 300px;
 	height: auto;
 	line-height: normal;
 	padding: 5px;
@@ -201,7 +201,7 @@ input {
 }
 
 .providers-list input, .providers-list label {
-	all: revert;
+	/* all: revert; */
 	padding-left: 10px;
 }
 
@@ -239,4 +239,15 @@ input {
 	left: 50%;
 	transform: translate(-50%, -50%);
 	background-color: #a90505;
+}
+.provider-edit {
+	width: 100%;
+}
+
+.provider-label {
+overflow: hidden;
+white-space: nowrap;
+text-overflow: ellipsis;
+flex-basis: 40px;
+
 }
