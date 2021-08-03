@@ -1,44 +1,30 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 	<head>
 		<meta charset="UTF-8">
 		<title>
 			Clients
 		</title>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
 		<link rel="stylesheet" href="./styles.css">
 	</head>
 	<body>
 		<div id="app" v-cloak>
-			<div v-if="addUser || editUser" class="shadding"></div>
-			<div v-if="addUser" class="top-modal-window">
-				<div class="header white-back">
-					<p class="flex-item">New Client</p>
-				</div>
-				<client></client>
-				<div class="footer white-back">
-					<button v-on:click="closeModal">Cancel</button>
-					<button>Add Client</button>
-				</div>
-			</div>
-			<div v-if="editUser" class="top-modal-window">
-				<div class="header white-back">
-					<p class="flex-item">Edit Client</p>
-				</div>
-				<client></client>
-				<div class="footer white-back">
-					<button id="del">Delete Client</button>
-					<span class="spacer"></span>
-					<button v-on:click="closeModal">Cancel</button>
-					<button>Save Client</button>
-				</div>
-			</div>
-			<div class="header">
-				<div class="flex-item">
-					<p>Clients</p>
-				</div>
-				<div class="flex-item">
-					<button v-on:click="openAddUser" v-bind:diable="addUser" v-bind:class="{ 'button-active': addUser }">New Client</button>
-				</div>
+			<div v-if="editClient" class="shadding"></div>
+			<edit-client
+				v-if="editClient"
+				@cancel="editClient = false"
+				@client-edited="saveClientLocal"
+				@change-providers="changeProviders"
+				@del-client="delClient"
+				@added-client="addClientLocal"
+				:client="currentClient"
+				:providers="providers">
+			</edit-client>
+			<div class="bar top blue">
+				<p class="title">Clients</p>
+				<span class="spacer"></span>
+				<button v-on:click="addClient">New Client</button>
 			</div>
 			<table>
 				<thead>
@@ -59,7 +45,7 @@
 					<th class="tableEdit">
 					</th>
 				</thead>
-				<tr v-for="entry in table">
+				<tr v-for="(entry, index) in clients">
 					<td>
 						{{ entry.name }}
 					</td>
@@ -70,13 +56,13 @@
 						{{ entry.phone }}
 					</td>
 					<td>
-						<span v-for="(provider, index) in getProviders(entry.providers)">{{ providers[index].name }}<span v-if="index < entry.providers.length - 1">, </span></span>
+						<span v-for="(provider, index) in existProviders(entry)"> {{ provider }}</span>
 					</td>
 					<td style="text-align: center">
-						<a href="" v-on:click.prevent="openEditUser">Edit</a>
+						<a href="" v-on:click.prevent="openEditClient(entry, index)">Edit</a>
 					</td>
 					<td style="text-align: center">
-						<a href="" v-on:click.prevent="openEditUser">Delete</a>
+						<a href="" v-on:click.prevent="delClient(index)">Delete</a>
 					</td>
 				</tr>
 			</table>

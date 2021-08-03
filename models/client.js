@@ -11,7 +11,7 @@ const client = new Schema({
 		unique: true
 	},
 	phone: {
-		type: Number,
+		type: String,
 		requried: true
 	},
 	providers: []

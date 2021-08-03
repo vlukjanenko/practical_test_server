@@ -74,7 +74,7 @@ router.put('/clients/:email', async(req, res) => {
 
 	try {
 		client = await Client.findOne({ email: req.params.email });
-		editedClient = await Provider.findOne({ email: req.body.email });
+		editedClient = await Client.findOne({ email: req.body.email });
 	} catch (err) {
 		return res.status(500).json({message: "Server error"});
 	}
@@ -82,7 +82,7 @@ router.put('/clients/:email', async(req, res) => {
 		return res.status(400).json({message: "Client not exist"});
 	}
 	if (editedClient && editedClient.email !== client.email) {
-		return res.status(400).json({message: "Client email: '" + req.body.email + "' already exist"});
+		return res.status(400).json({message: "Client with email: '" + req.body.email + "' already exist"});
 	}
 
 	client.name = req.body.name;
