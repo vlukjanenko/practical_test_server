@@ -15,15 +15,31 @@ Vue.component('edit-client', {
 		},
 		edit: false,
 		providersList: [],
-		newProvider: ''
+		newProvider: '',
+		editedProvider: {
+			name: String,
+			id: Number,
+			index: Number,
+			enabled: false
+		}
 	  }
 	},
-	/* computed: {
-		isFormValid: function() {
-			let re = new RegExp("[0-9]{3}-[0-9]{3}-[0-9]{4}");
-			return re.test(this.candidate.phone) && this.candidate.phone.length === 12;
+	computed: {
+		formatedPhone: {
+		  get: function () {
+			let formatedPhone = this.candidate.phone;
+			if (formatedPhone.length > 2 && formatedPhone.length < 6) {
+				formatedPhone = [formatedPhone.slice(0, 3), '-', formatedPhone.slice(3, formatedPhone.length)].join('');
+			} else if (formatedPhone.length > 5) {
+				formatedPhone = [formatedPhone.slice(0, 3), '-', formatedPhone.slice(3, 6), '-', formatedPhone.slice(6,  formatedPhone.length)].join('');
+			}
+			return formatedPhone;
+		  },
+		  set: function (newValue) {
+			this.candidate.phone = newValue.replace(/-/g, '');
+		  }
 		}
-	}, */
+	  },
 	mounted() {
 		if (this.client) {
 			this.candidate.name = this.client.name;
@@ -53,9 +69,9 @@ Vue.component('edit-client', {
 				alert('Valid email required');
 				return false;
 			}
-			let phone = new RegExp("[0-9]{3}-[0-9]{3}-[0-9]{4}");
-			if (!(phone.test(this.candidate.phone) && this.candidate.phone.length === 12)) {
-				alert('Phone number required\nformat: ###-###-####');
+			let phone = new RegExp("[0-9]+");
+			if (!(phone.test(this.candidate.phone) && this.candidate.phone.length >= 10)) {
+				alert('Valid phone number required\nmin 10 digits');
 				return false;
 			}
 			return true;
@@ -119,6 +135,41 @@ Vue.component('edit-client', {
 				alert(e);
 			})
 		},
+		editProviderEnable: function(index) {
+			this.editedProvider.enabled = true;
+			this.editedProvider.id = this.providersList[index].id;
+			this.editedProvider.name = this.providersList[index].name;
+			this.editedProvider.index = index;
+			this.$nextTick(() => this.$refs.edfield[0].focus());
+		},
+		saveProvider: function() {
+			if (!this.editedProvider.name) {
+				return;
+			}
+			fetch('http://localhost:3000/api/providers/' + this.editedProvider.id, {
+				method: 'PUT',
+				headers: {
+					'Content-Type': 'application/json'
+				  },
+				body: JSON.stringify(this.editedProvider)
+			})
+			.then(response => {
+				return (response.json());
+			})
+			.then(json => {
+				if (json.message) {
+					alert(json.message);
+				} else {
+					this.providersList[this.editedProvider.index].name = json.name;
+					this.editedProvider.enabled = false;
+					this.$emit('change-providers', this.providersList);
+				}
+			})
+			.catch(e => {
+				console.log(e);
+				alert(e);
+			})
+		},
 		delProvider: function(i) {
 			fetch('http://localhost:3000/api/providers/' + this.providersList[i].id, {
 				method: 'DELETE'
@@ -127,7 +178,12 @@ Vue.component('edit-client', {
 			.then(() => {
 				this.providersList[i].checked = false;
 				this.providersList.splice(i, 1);
+				this.editedProvider.enabled = false;
 				this.$emit('change-providers', this.providersList);
+			})
+			.catch(e => {
+				console.log(e);
+				alert(e);
 			});
 		},
 		saveClient: function() {
@@ -153,6 +209,7 @@ Vue.component('edit-client', {
 					alert(json.message);
 				} else {
 					this.candidate.index = this.client.index; // тут сомненья
+					/* this.candidate.phone = this.candidate.phone.replace(/-/g, ''); */
 					this.$emit('client-edited', this.candidate);
 				}
 			})
@@ -180,7 +237,7 @@ Vue.component('edit-client', {
 		</div>
 		<div class="line-container">
 			<label class="form-label" for="phone">Phone:</label>
-			<input class="big-input" type="tel" id="phone" v-model.trim="candidate.phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required title="Client phone">
+			<input class="big-input" type="tel" id="phone" v-model.trim="formatedPhone" title="Client phone">
 		</div>
 		<div class="line-container">
 			<label class="form-label" for="provider">Providers:</label>
@@ -190,39 +247,20 @@ Vue.component('edit-client', {
 		<div class="providers-list">
 			<div v-for="(provider, index) in providersList" class="provider-line-container">
 				<input type="checkbox" v-model="provider.checked">
-				<label :title="provider.name">{{ provider.name }}</label>
+				<input ref="edfield"
+					@keyup.enter="saveProvider"
+					@blur="editedProvider.enabled = false"
+					@keyup.esc="editedProvider.enabled = false"
+					v-if="editedProvider.enabled && editedProvider.index == index"
+					:title="provider.name" type="text"
+					v-model="editedProvider.name">
+				</input>
+				<label v-else :title="provider.name">{{ provider.name }}</label>
+
 				<span class="spacer"></span>
-				<i class="fa fa-edit"></i>
+				<i @click="editProviderEnable(index)" class="fa fa-edit"></i>
 				<i @click="delProvider(index)"class="fa fa-trash"></i>
 			</div>
-			<!-- <div class="provider-line-container">
-				<input type="checkbox">
-				<input title="Provider 2" type="text" value="Provider 2"></input>
-				<span class="spacer"></span>
-				<i class="fa fa-edit"></i>
-				<i class="fa fa-trash"></i>
-			</div>
-			<div class="provider-line-container">
-				<input type="checkbox">
-				<label title="Provider 1 with very long name">Provider 1 with very long name</label>
-				<span class="spacer"></span>
-				<i class="fa fa-edit"></i>
-				<i class="fa fa-trash"></i>
-			</div>
-			<div class="provider-line-container">
-				<input type="checkbox">
-				<label title="Provider 1 with very long name">Provider 1 with very long name</label>
-				<span class="spacer"></span>
-				<i class="fa fa-edit"></i>
-				<i class="fa fa-trash"></i>
-			</div>
-			<div class="provider-line-container">
-				<input type="checkbox">
-				<label title="Provider 1 with very long name">Provider 1 with very long name</label>
-				<span class="spacer"></span>
-				<i class="fa fa-edit"></i>
-				<i class="fa fa-trash"></i>
-			</div> -->
 		</div>
 	</div>
 	<div class="bar bottom">
@@ -254,18 +292,25 @@ var app = new Vue({
 
 	computed: {
 
-		},
+	},
 	methods: {
 		loadClients: function() {
 			fetch('http://localhost:3000/api/clients')
 			.then(response => response.json())
-			.then(json => this.clients = json);
+			.then(json => this.clients = json)
+			.catch(e => {
+				console.log(e);
+				alert(e);
+			});
 		},
 		loadProviders: function() {
 			fetch('http://localhost:3000/api/providers')
 			.then(response => response.json())
-			.then(json => {
-				this.providers = json});
+			.then(json => this.providers = json)
+			.catch(e => {
+				console.log(e);
+				alert(e);
+			});
 		},
 		addClient: function() {
 			this.currentClient = null;
@@ -279,6 +324,10 @@ var app = new Vue({
 			.then(() => {
 				this.clients.splice(index, 1);
 				this.editClient = false;
+			})
+			.catch(e => {
+				console.log(e);
+				alert(e);
 			});
 		},
 		openEditClient: function(client, index) {
@@ -298,20 +347,22 @@ var app = new Vue({
 			console.log("come")
 			this.providers = data;
 		},
-		existProviders: function(client) {
-			let providers = [];
-
-			for (let i = 0; i < client.providers.length; i++) {
-				let provider = this.providers.find(p => client.providers[i].id === p.id);
-				if (provider) {
-					if (i < client.providers.length - 1) {
-						providers.push(provider.name + ", ");
-					} else {
-						providers.push(provider.name);
-					}
-				}
+		formatedPhone: function(client) {
+			let formatedPhone = client.phone;
+			if (formatedPhone.length > 2 && formatedPhone.length < 6) {
+				formatedPhone = [formatedPhone.slice(0, 3), '-', formatedPhone.slice(3, formatedPhone.length)].join('');
+			} else if (formatedPhone.length > 5) {
+				formatedPhone = [formatedPhone.slice(0, 3), '-', formatedPhone.slice(3, 6), '-', formatedPhone.slice(6,  formatedPhone.length)].join('');
 			}
+			return formatedPhone;
+		},
+		existProviders: function(client) {
+			let lengthHolder = {value: 0};
+			let providers =  this.providers.filter(provider => client.providers
+				.find(clientProvider => clientProvider.id === provider.id))
+				.map(el => ({name: el.name, len: lengthHolder}));
+			lengthHolder.value = providers.length;
 			return providers;
-		}
+		},
 	}
 });

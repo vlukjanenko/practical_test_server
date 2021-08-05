@@ -53,10 +53,10 @@
 						{{ entry.email }}
 					</td>
 					<td>
-						{{ entry.phone }}
+						{{ formatedPhone(entry) }}
 					</td>
 					<td>
-						<span v-for="(provider, index) in existProviders(entry)"> {{ provider }}</span>
+						<span style="white-space: nowrap; display: inline-block;" v-for="(provider, i) in existProviders(entry)"> {{ provider.name }}<span v-if="(i < provider.len.value - 1)">,&nbsp;</span></span>
 					</td>
 					<td style="text-align: center">
 						<a href="" v-on:click.prevent="openEditClient(entry, index)">Edit</a>
