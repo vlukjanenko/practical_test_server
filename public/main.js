@@ -1,9 +1,9 @@
-
 Vue.component('edit-client', {
 	props: {
 			client: Object,
 			index: Number,
-			providers: Array
+			providers: Array,
+			parentPending: Boolean
 		},
 	data: function () {
 	  return {
@@ -21,8 +21,14 @@ Vue.component('edit-client', {
 			id: Number,
 			index: Number,
 			enabled: false
-		}
+		},
+		pending: false
 	  }
+	},
+	watch: {
+		parentPending: function(newVal, oldVal) {
+			this.pending = newVal;
+		}
 	},
 	computed: {
 		formatedPhone: {
@@ -56,10 +62,10 @@ Vue.component('edit-client', {
 			}
 			return element;
 		});
+		this.pending = this.parentPending;
 	},
 	methods: {
 		isFormValid: function() {
-
 			if (this.candidate.name.length < 2) {
 				alert('Name required\nmin 2 chars');
 				return false;
@@ -69,8 +75,8 @@ Vue.component('edit-client', {
 				alert('Valid email required');
 				return false;
 			}
-			let phone = new RegExp("[0-9]+");
-			if (!(phone.test(this.candidate.phone) && this.candidate.phone.length >= 10)) {
+			let phone = new RegExp("^[0-9]{10}[0-9]*$");
+			if (!(phone.test(this.candidate.phone))) {
 				alert('Valid phone number required\nmin 10 digits');
 				return false;
 			}
@@ -84,6 +90,7 @@ Vue.component('edit-client', {
 				.filter(element => element.checked)
 				.map(element => { return {id: element.id}});
 			this.candidate.providers = providers;
+			this.pending = true;
 			fetch('http://localhost:3000/api/clients', {
 				method: 'POST',
 				headers: {
@@ -100,17 +107,19 @@ Vue.component('edit-client', {
 				} else {
 					this.$emit('added-client', json);
 				}
+				this.pending = false;
 			})
 			.catch(e => {
 				console.log(e);
 				alert(e);
+				this.pending = false;
 			})
 		},
 		addProvider: function() {
 			if(!this.newProvider) {
 				return;
 			}
-
+			this.pending = true;
 			fetch('http://localhost:3000/api/providers', {
 				method: 'POST',
 				headers: {
@@ -129,10 +138,12 @@ Vue.component('edit-client', {
 					this.newProvider = '';
 					this.$emit('change-providers', this.providersList);
 				}
+				this.pending = false;
 			})
 			.catch(e => {
 				console.log(e);
 				alert(e);
+				this.pending = false;
 			})
 		},
 		editProviderEnable: function(index) {
@@ -146,6 +157,7 @@ Vue.component('edit-client', {
 			if (!this.editedProvider.name) {
 				return;
 			}
+			this.pending = true;
 			fetch('http://localhost:3000/api/providers/' + this.editedProvider.id, {
 				method: 'PUT',
 				headers: {
@@ -164,13 +176,16 @@ Vue.component('edit-client', {
 					this.editedProvider.enabled = false;
 					this.$emit('change-providers', this.providersList);
 				}
+				this.pending = false;
 			})
 			.catch(e => {
 				console.log(e);
 				alert(e);
+				this.pending = false;
 			})
 		},
 		delProvider: function(i) {
+			this.pending = true;
 			fetch('http://localhost:3000/api/providers/' + this.providersList[i].id, {
 				method: 'DELETE'
 			})
@@ -180,16 +195,19 @@ Vue.component('edit-client', {
 				this.providersList.splice(i, 1);
 				this.editedProvider.enabled = false;
 				this.$emit('change-providers', this.providersList);
+				this.pending = false;
 			})
 			.catch(e => {
 				console.log(e);
 				alert(e);
+				this.pending = false;
 			});
 		},
 		saveClient: function() {
 			if (!this.isFormValid()) {
 				return;
 			}
+			this.pending = true;
 			const providers = this.providersList
 				.filter(element => element.checked)
 				.map(element => { return {id: element.id}});
@@ -208,20 +226,26 @@ Vue.component('edit-client', {
 				if (json.message) {
 					alert(json.message);
 				} else {
-					this.candidate.index = this.client.index; // тут сомненья
-					/* this.candidate.phone = this.candidate.phone.replace(/-/g, ''); */
+					this.candidate.index = this.client.index;
 					this.$emit('client-edited', this.candidate);
 				}
+				this.pending = false;
 			})
 			.catch(e => {
 				console.log(e);
 				alert(e);
+				this.pending = false;
 			})
+		},
+		delClient: function(index) {
+			this.$emit('del-client', index);
 		}
 	}
 	,
 	template: `
 	<form class="form-container">
+	<div v-if="pending" class="processing-state">
+	</div>
 	<div class="bar top">
 		<p v-if="!edit" class="title">New Client</p>
 		<p v-else class="title">Edit Client</p>
@@ -264,7 +288,7 @@ Vue.component('edit-client', {
 		</div>
 	</div>
 	<div class="bar bottom">
-		<button id="del" v-if="edit" @click.prevent="$emit('del-client', client.index)" >Delete Client</button>
+		<button id="del" v-if="edit" @click.prevent="delClient(client.index)" >Delete Client</button>
 		<span class="spacer"></span>
 		<div class="bottom-right-buttons">
 			<button v-on:click.prevent="$emit('cancel')">Cancel</button>
@@ -282,16 +306,12 @@ var app = new Vue({
 		this.loadClients();
 		this.loadProviders();
 	},
-
 	data: {
 		editClient: false,
 		providers: [],
 		clients: [],
-		currentClient: null
-	},
-
-	computed: {
-
+		currentClient: null,
+		pending: false
 	},
 	methods: {
 		loadClients: function() {
@@ -317,6 +337,7 @@ var app = new Vue({
 			this.editClient = true;
 		},
 		delClient: function(index) {
+			this.pending = true;
 			fetch('http://localhost:3000/api/clients/' + this.clients[index].email, {
 				method: 'DELETE'
 			})
@@ -324,10 +345,12 @@ var app = new Vue({
 			.then(() => {
 				this.clients.splice(index, 1);
 				this.editClient = false;
+				this.pending = false;
 			})
 			.catch(e => {
 				console.log(e);
 				alert(e);
+				this.pending = false;
 			});
 		},
 		openEditClient: function(client, index) {
@@ -344,7 +367,6 @@ var app = new Vue({
 			this.editClient = false;
 		},
 		changeProviders: function(data) {
-			console.log("come")
 			this.providers = data;
 		},
 		formatedPhone: function(client) {

@@ -64,7 +64,7 @@ thead {
 	width: 10%;
 }
 
-.shadding {
+.shading {
 	position: absolute;
 	height: 100%;
 	width: 100%;
@@ -217,4 +217,18 @@ input[type="checkbox"] {
 
 i {
 	margin: 0 5px;
+}
+
+
+.processing-state {
+	cursor: wait;
+	font-size: x-large;
+	color: #a90505;
+	position: absolute;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: RGBA(255, 255, 255, 0);
+	height: 100%;
+	width: 100%;
 }

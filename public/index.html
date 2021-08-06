@@ -5,12 +5,13 @@
 		<title>
 			Clients
 		</title>
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
-		<link rel="stylesheet" href="./styles.css">
+<!-- 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+ -->		<link rel="stylesheet" href="./styles.css">
 	</head>
 	<body>
 		<div id="app" v-cloak>
-			<div v-if="editClient" class="shadding"></div>
+			<div v-if="editClient" class="shading"></div>
+			<div v-if="pending" class="processing-state"></div>
 			<edit-client
 				v-if="editClient"
 				@cancel="editClient = false"
@@ -19,7 +20,8 @@
 				@del-client="delClient"
 				@added-client="addClientLocal"
 				:client="currentClient"
-				:providers="providers">
+				:providers="providers"
+				:parent-pending="pending">
 			</edit-client>
 			<div class="bar top blue">
 				<p class="title">Clients</p>
