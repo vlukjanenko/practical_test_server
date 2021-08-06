@@ -1,5 +1,6 @@
-const express = require('express');
+const express = require('express')
 const mongoose = require('mongoose');
+const cors = require('cors');
 const app = express();
 const path = require('path');
 const PORT = 3000;
@@ -8,6 +9,7 @@ const clientsRoutes = require('./routes/clients');
 const providersRoutes = require('./routes/providers');
 
 app.use(express.json());
+app.use(cors());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api', clientsRoutes);
 app.use('/api', providersRoutes);

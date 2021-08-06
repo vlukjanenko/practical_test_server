@@ -85,10 +85,18 @@ router.put('/clients/:email', async(req, res) => {
 		return res.status(400).json({message: "Client with email: '" + req.body.email + "' already exist"});
 	}
 
+	let existProviders = [];
+	for (i = 0; i < req.body.providers.length; i++) {
+		let p = await Provider.findOne({_id: req.body.providers[i].id});
+		if (p) {
+			existProviders.push(req.body.providers[i]);
+		}
+	}
+
 	client.name = req.body.name;
 	client.email = req.body.email;
 	client.phone = req.body.phone;
-	client.providers = req.body.providers;
+	client.providers = existProviders;
 
 	try {
 		await client.save();
@@ -119,7 +127,7 @@ router.delete('/clients/:email', async (req, res) => {
 		return res.status(500).json({message: "Server error"});
 	}
 	if (!client) {
-		return res.status(200).json({message: "Client not exist"});
+		return res.status(400).json({message: "Client with email: '" + req.params.email + "' not exist"});
 	}
 	return res.status(200).json({
 		name: client.name,
