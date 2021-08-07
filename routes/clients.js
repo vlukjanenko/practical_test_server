@@ -24,6 +24,9 @@ router.get('/clients', async(req, res) => {
 			providers: clients[i].providers
 		})
 	}
+	response.sort(function(a, b) {
+		return a.name.localeCompare(b.name);
+	  });
 	return res.status(200).json(response);
 })
 

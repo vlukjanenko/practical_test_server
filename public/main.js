@@ -1,3 +1,7 @@
+function compare(a, b) {
+	return a.name.localeCompare(b.name);
+}
+
 Vue.component('edit-client', {
 	props: {
 			client: Object,
@@ -360,14 +364,17 @@ var app = new Vue({
 		},
 		addClientLocal: function(data) {
 			this.clients.push(data);
+			this.clients.sort(compare);
 			this.editClient = false;
 		},
 		saveClientLocal: function(data) {
 			this.clients[data.index] = data;
+			this.clients.sort(compare);
 			this.editClient = false;
 		},
 		changeProviders: function(data) {
 			this.providers = data;
+			this.providers.sort(compare);
 		},
 		formatedPhone: function(client) {
 			let formatedPhone = client.phone;
