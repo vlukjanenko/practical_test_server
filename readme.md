@@ -5,6 +5,7 @@ Vladislav Lukyanenko <vlukjanenko@mail.ru>
 
 ## Requirements to lunch
 - Nodejs
+- npm
 - Available connection to mongodb database
 ## How to run
 Download __practical_test_server-master.zip__.
