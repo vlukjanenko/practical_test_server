@@ -9,8 +9,6 @@ Vladislav Lukyanenko <vlukjanenko@mail.ru>
 - npm
 - Available connection to mongodb database
 ## How to run
-Download __practical_test_server-master.zip__ , unzip it, open terminal in unzipped directory, then run
-
 ```
 npm install --only=prod
 ```
