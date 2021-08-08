@@ -9,10 +9,11 @@ Vladislav Lukyanenko <vlukjanenko@mail.ru>
 - npm
 - Available connection to mongodb database
 ## How to run
+Open terminal in project directory and install dependencies with command
 ```
 npm install --only=prod
 ```
-Now you can run it with default application port 3000 and connection to mongodb in claud
+Now you can run it with default application port 3000 and connection to mongodb in cloud
 ```
 node index.js
 ```
@@ -39,7 +40,7 @@ Database mongodb
 - DB_HOST - host name where database is (leave blank for localhost)
 - DB_USER - user name for database access (leave blank for unsecured access)
 - DB_PASS - user password
-- DB_NAME - db name (if blank nave will be "majosue_practical")
+- DB_NAME - db name (if blank name will be "majosue_db")
 ___
 
 Frontend files are located in /public
