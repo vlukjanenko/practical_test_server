@@ -1,13 +1,13 @@
 {
   "name": "practical_task_server",
   "version": "1.0.0",
-  "description": "",
+  "description": "Practical test for fullstack javascript developer",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js"
   },
-  "author": "",
+  "author": "Vladislav Lukyanenko",
   "license": "ISC",
   "dependencies": {
     "dotenv": "^10.0.0",
