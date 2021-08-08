@@ -1,6 +1,7 @@
 {
   "name": "practical_task_server",
   "version": "1.0.0",
+  "private": true,
   "description": "Practical test for fullstack javascript developer",
   "main": "index.js",
   "scripts": {
