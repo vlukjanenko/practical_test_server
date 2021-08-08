@@ -4,6 +4,7 @@
 Vladislav Lukyanenko <vlukjanenko@mail.ru>
 
 ## Requirements to lunch
+- Internet connection
 - Nodejs
 - npm
 - Available connection to mongodb database
@@ -18,10 +19,13 @@ cd practical_test_server-master
 npm install --only=prod
 
 ```
+Now you can run it with default application port 3000 and connection to mongodb in claud
+```
+node index.js
+```
 ___
 
-By default application run on 3000 port and connect to mongodb in claud.
-To change it edit file .env
+To change PORT and database connection edit file .env
 ```
 DB_SRV=1
 DB_HOST=cluster0.2qtsg.mongodb.net
@@ -51,10 +55,6 @@ Frontend files are located in /public
 - main.js
 ___
 
-## Run
-```
-node index.js
-```
 Then in browser go to (change  PORT to it`s value)
 - localhost:PORT - for frontend
 - localhost:PORT/api-docs - for Swagger doc
