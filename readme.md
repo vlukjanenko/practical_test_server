@@ -17,6 +17,8 @@ cd practical_test_server-master
 npm install --only=prod
 
 ```
+___
+
 By default application run on 3000 port and connect to mongodb in claud.
 To change it edit file .env
 ```
@@ -40,13 +42,19 @@ Database mongodb
 - DB_USER - user name for database access (leave blank for unsecured access)
 - DB_PASS - user password
 - DB_NAME - db name (if blank nave will be "majosue_practical")
+___
+
+Frontend files are located in /public
+- index.html
+- styles.css
+- main.js
+___
+
 ## Run
 ```
 node index.js
 ```
-Then in browser go to
-- localhost:(port number) - for frontend
-- localhost:(port number)/api-docs - for Swagger doc
+Then in browser go to (change  PORT to it`s value)
+- localhost:PORT - for frontend
+- localhost:PORT/api-docs - for Swagger doc
 
-
-Frontend files are located in /public
