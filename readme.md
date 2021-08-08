@@ -9,15 +9,10 @@ Vladislav Lukyanenko <vlukjanenko@mail.ru>
 - npm
 - Available connection to mongodb database
 ## How to run
-Download __practical_test_server-master.zip__.
+Download __practical_test_server-master.zip__ , unzip it, open terminal in unzipped directory, then run
 
 ```
-unzip -a practical_test_server-master.zip
-
-cd practical_test_server-master
-
 npm install --only=prod
-
 ```
 Now you can run it with default application port 3000 and connection to mongodb in claud
 ```
@@ -55,7 +50,7 @@ Frontend files are located in /public
 - main.js
 ___
 
-Then in browser go to (change  PORT to it`s value)
+In browser you can go to (change PORT to it`s value)
 - localhost:PORT - for frontend
 - localhost:PORT/api-docs - for Swagger doc
 
