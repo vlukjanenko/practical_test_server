@@ -103,7 +103,7 @@ router.delete('/providers/:id', async(req, res) => {
 		return res.status(500).json({message: "Server error"});
 	}
 	if (!provider) {
-		return res.status(200).json({messate: "Provider not exist"});
+		return res.status(200).json({message: "Provider not exist"});
 	}
 	return res.status(200).json({
 		id: provider._id,

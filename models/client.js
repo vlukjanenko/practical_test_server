@@ -12,7 +12,7 @@ const client = new Schema({
 	},
 	phone: {
 		type: String,
-		requried: true
+		required: true
 	},
 	providers: []
 });

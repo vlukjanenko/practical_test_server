@@ -31,7 +31,7 @@ router.get('/clients', async(req, res) => {
 })
 
 /*
-**	Add clietnt
+**	Add client
 */
 
 router.post('/clients', async(req, res) => {
