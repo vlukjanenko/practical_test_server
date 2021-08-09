@@ -49,7 +49,7 @@ Frontend files are located in /public
 - main.js
 ___
 
-In browser you can go to (change PORT to it`s value)
+After successful run, in browser you can go to (change PORT to it`s value)
 - localhost:PORT - for frontend
 - localhost:PORT/api-docs - for Swagger doc
 
