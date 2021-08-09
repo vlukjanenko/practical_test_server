@@ -25,10 +25,6 @@
 	flex-grow: 1;
 }
 
-/*
-**	Table
-*/
-
 table {
 	width: 100%;
 	border-collapse: collapse;
@@ -70,10 +66,6 @@ thead {
 	width: 100%;
 	background-color: RGBA(255, 255, 255, 0);
 }
-
-/*
-**	Modal
-*/
 
 .form-container {
 	box-shadow: 1px 1px 5px black;
@@ -172,10 +164,6 @@ button:active {
 	color: #306a86;
 }
 
-.spacer {
-	flex-grow: 1;
-}
-
 .bottom-right-buttons {
 	display: flex;
 	align-items: center;
@@ -218,7 +206,6 @@ input[type="checkbox"] {
 i {
 	margin: 0 5px;
 }
-
 
 .processing-state {
 	cursor: wait;
