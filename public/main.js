@@ -4,30 +4,30 @@ function compare(a, b) {
 
 Vue.component('edit-client', {
 	props: {
-			client: Object,
-			index: Number,
-			providers: Array,
-			parentPending: Boolean
-		},
+		client: Object,
+		index: Number,
+		providers: Array,
+		parentPending: Boolean
+	},
 	data: function () {
-	  return {
-		candidate: {
-			name: '',
-			email: '',
-			phone: '',
-			providers: []
-		},
-		edit: false,
-		providersList: [],
-		newProvider: '',
-		editedProvider: {
-			name: String,
-			id: Number,
-			index: Number,
-			enabled: false
-		},
-		pending: false
-	  }
+		return {
+			candidate: {
+				name: '',
+				email: '',
+				phone: '',
+				providers: []
+			},
+			edit: false,
+			providersList: [],
+			newProvider: '',
+			editedProvider: {
+				name: String,
+				id: Number,
+				index: Number,
+				enabled: false
+			},
+			pending: false
+		}
 	},
 	watch: {
 		parentPending: function(newVal, oldVal) {
@@ -244,8 +244,7 @@ Vue.component('edit-client', {
 		delClient: function(index) {
 			this.$emit('del-client', index);
 		}
-	}
-	,
+	},
 	template: `
 	<form class="form-container">
 	<div v-if="pending" class="processing-state">
@@ -300,8 +299,7 @@ Vue.component('edit-client', {
 			<button v-else @click.prevent="saveClient">Save Client</button>
 		</div>
 	</div>
-</form>
-	`
+</form>`
 });
 
 var app = new Vue({
