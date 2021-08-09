@@ -2,7 +2,7 @@
   "swagger": "2.0",
   "info": {
     "title": "Clients",
-    "description": "clients managment API",
+    "description": "clients management API",
     "contact": {
       "email": "vlukjanenko@mail.ru"
     },
