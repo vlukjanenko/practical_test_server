@@ -13,19 +13,13 @@ Open terminal in project directory and install dependencies with command
 ```
 npm install --only=prod
 ```
-Now you can run it with default application port 3000 and connection to mongodb in cloud
+Create .env file for application config
 ```
-node index.js
-```
-___
-
-To change PORT and database connection edit file .env
-```
-DB_SRV=1
-DB_HOST=cluster0.2qtsg.mongodb.net
-DB_USER=vlad
-DB_PASS=fL2FbWdH9zG3P6P
-DB_NAME=practical
+DB_SRV=
+DB_HOST=
+DB_USER=
+DB_PASS=
+DB_NAME=
 
 PORT=3000
 ```
@@ -42,7 +36,11 @@ Database mongodb
 - DB_PASS - user password
 - DB_NAME - db name (if blank name will be "majosue_db")
 ___
-
+Now you can run it
+```
+node index.js
+```
+___
 Frontend files are located in /public
 - index.html
 - styles.css
