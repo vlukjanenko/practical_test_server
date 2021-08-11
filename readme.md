@@ -3,7 +3,7 @@
 ## Author
 Vladislav Lukyanenko <vlukjanenko@mail.ru>
 
-## Requirements to lunch
+## Requirements to launch
 - Internet connection
 - Nodejs
 - npm
